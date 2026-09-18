@@ -1,0 +1,45 @@
+{
+  "name": "skillsight",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "test": "node --test src/lib/__tests__/*.test.js",
+    "thumbnails": "node scripts/generate-thumbnails.mjs",
+    "create-admin": "node scripts/create-admin.mjs",
+    "promote-admin": "node scripts/promote-admin.mjs",
+    "set-super-admin": "node scripts/set-super-admin.mjs",
+    "seed": "node scripts/seed.mjs",
+    "db:push": "drizzle-kit push"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.1",
+    "@vercel/blob": "^2.8.0",
+    "better-auth": "^1.7.4",
+    "drizzle-orm": "^0.45.2",
+    "framer-motion": "^13.2.0",
+    "next": "16.3.4",
+    "postgres": "^3.4.9",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "playwright": "^1.63.0",
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4"
+  }
+}

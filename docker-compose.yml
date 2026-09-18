@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: skillsight
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: skillsight
+    ports:
+      - "5433:5432"
+    volumes:
+      - skillsight_pgdata:/var/lib/postgresql/data
+
+volumes:
+  skillsight_pgdata:

@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+/*
+ * Skillsight — Indigo & Coral, in two modes.
+ *
+ * Every color is a plain custom property (--c-*) defined twice: once on
+ * :root for dark (the site's default) and again under [data-theme="light"].
+ * @theme then points each Tailwind color token at the matching --c-*
+ * variable instead of a literal value, so bg-background/text-text/etc.
+ * resolve at runtime to whichever mode is active — no component ever
+ * touches these variables directly, and ThemeToggle only ever flips the
+ * `data-theme` attribute on <html> (see ThemeProvider.jsx).
+ *
+ * Indigo is the color most associated with focus and concentration — the
+ * "serious tool" half of the pairing. Coral carries every actionable
+ * element so the site still reads as human and warm, not a cold database
+ * of links. Light flips the ground to a cool near-white with the same
+ * indigo ink for text; both accents deepen enough to hold WCAG AA on a
+ * pale ground — admin fills stay dark indigo in both modes so admin views
+ * read as a distinct, weightier surface either way.
+ */
+:root {
+  --c-background: #14152b;
+  --c-surface: #1f2142;
+  --c-surface-sunk: #0a0b1c;
+  --c-divider: #262850;
+  --c-border: #2c2f5c;
+  --c-text: #eef0fb;
+  --c-text-muted: #a7abd6;
+  --c-primary: #ff8a72;
+  --c-primary-hover: #ff9f8a;
+  --c-primary-ink: #14152b;
+  --c-highlight: #8b93f0;
+  --c-highlight-ink: #14152b;
+  --c-admin: #0a0b1c;
+  --c-admin-ink: #eef0fb;
+  --c-admin-accent: #ffab98;
+  --c-error: #f2726b;
+  --c-success: #7dd3a0;
+  --c-warning: #f0b24a;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --c-background: #f5f5fd;
+  --c-surface: #ffffff;
+  --c-surface-sunk: #e6e7fa;
+  --c-divider: #dcdef6;
+  --c-border: #cdd0f1;
+  --c-text: #181a3a;
+  --c-text-muted: #5c5f96;
+  --c-primary: #a83a26;
+  --c-primary-hover: #8f3020;
+  --c-primary-ink: #fef8f6;
+  --c-highlight: #4a4fc4;
+  --c-highlight-ink: #f5f5fd;
+  --c-admin: #14152b;
+  --c-admin-ink: #f5f5fd;
+  --c-admin-accent: #3a3f9e;
+  --c-error: #b3261e;
+  --c-success: #2f7a52;
+  --c-warning: #96650f;
+  color-scheme: light;
+}
+
+@theme {
+  --color-background: var(--c-background);
+  --color-surface: var(--c-surface);
+  --color-surface-sunk: var(--c-surface-sunk);
+  --color-divider: var(--c-divider);
+  --color-border: var(--c-border);
+  --color-text: var(--c-text);
+  --color-text-muted: var(--c-text-muted);
+  --color-primary: var(--c-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-primary-ink: var(--c-primary-ink);
+  --color-highlight: var(--c-highlight);
+  --color-highlight-ink: var(--c-highlight-ink);
+  --color-admin: var(--c-admin);
+  --color-admin-ink: var(--c-admin-ink);
+  --color-admin-accent: var(--c-admin-accent);
+  --color-error: var(--c-error);
+  --color-success: var(--c-success);
+  --color-warning: var(--c-warning);
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-primary-ink);
+}
+
+/* Transparent-track scrollbar in the theme's own tones, instead of the
+   browser's default (light/white) scrollbar. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-highlight);
+}
+
+/* Skeuomorphic "soft UI" depth: layered box-shadows that read a surface as
+ * raised or sunken relative to what's around it, built from the theme's own
+ * tones (color-mix against white/black) rather than literal textures. These
+ * layer on top of whatever Tailwind background/border utilities a control
+ * already has — .skeu-depth is shadow-only so it works over any fill color
+ * (bg-primary, bg-admin, a plain border), while .skeu-well and .skeu-panel
+ * also set their own background for surfaces that don't otherwise have one.
+ */
+.skeu-depth {
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in srgb, white 18%, transparent),
+    inset 0 -1px 0 0 color-mix(in srgb, black 30%, transparent),
+    0 3px 6px -1px color-mix(in srgb, black 40%, transparent);
+  transition: box-shadow 0.12s ease, transform 0.08s ease;
+}
+.skeu-depth:active {
+  box-shadow: inset 0 1px 3px 0 color-mix(in srgb, black 45%, transparent);
+  transform: translateY(1px);
+}
+
+.skeu-well {
+  background: var(--color-surface-sunk);
+  box-shadow:
+    inset 0 2px 4px 0 color-mix(in srgb, black 50%, transparent),
+    inset 0 -1px 0 0 color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+
+.skeu-panel {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-surface) 100%, white 3%) 0%,
+    var(--color-surface) 70%
+  );
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in srgb, var(--color-text) 6%, transparent),
+    0 10px 24px -12px color-mix(in srgb, black 60%, transparent);
+}
+
+/* Legibility helper for text sitting directly on the dark photo scrim in
+ * SiteCard (see the bg-[linear-gradient(...)] there): a soft dark halo.
+ * Local contrast against a photo varies with whatever color is behind a
+ * given letter, so the halo keeps text readable everywhere.
+ */
+.legible-on-glass {
+  text-shadow:
+    0 0 1px color-mix(in srgb, black 92%, transparent),
+    0 0 6px color-mix(in srgb, black 65%, transparent),
+    0 0 14px color-mix(in srgb, black 45%, transparent),
+    0 1px 2px color-mix(in srgb, black 55%, transparent);
+}
+
+/* A pill/chip meant to float directly on top of a photo (a thumbnail image),
+ * not on the card's own surface — deliberately a fixed dark scrim rather
+ * than theme-tokened like .glass-panel, so it stays legible against
+ * whatever colors happen to be in the photo underneath, and looks the same
+ * in light mode as in dark mode (the way a photo caption chip does on any
+ * real photo app, regardless of the app's own theme).
+ */
+.glass-badge {
+  background: color-mix(in srgb, black 75%, transparent);
+  backdrop-filter: blur(6px) saturate(160%);
+  -webkit-backdrop-filter: blur(6px) saturate(160%);
+  border: 1px solid color-mix(in srgb, white 25%, transparent);
+  color: #fff;
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-highlight);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Grows a control's tappable area to at least 44x44px on small screens via
+   an invisible ::before, without changing its visible size. Desktop (>=768px)
+   is untouched. Callers must leave enough surrounding gap (>=8px once this
+   expansion is added) so adjacent expanded targets don't touch. */
+@media (max-width: 767px) {
+  .tap-target {
+    position: relative;
+  }
+  .tap-target::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
